@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Text = require('../models/text');
+const Blab = require('../models/blab');
+const mongoose = require('mongoose');
 
 
 router.get('/', (req, res, next) => {
@@ -29,7 +30,9 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const data = new Text({
+    const data = new Blab({
+        _id: new mongoose.Types.ObjectId(),
+        postTime: Date.now, 
         author:{
             email: req.body.email,
             name: req.body.name
@@ -58,8 +61,8 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.delete('/:blabID', function (req, res, next) => {
-    const id = req.params.blabID;
+router.delete('/:{id}', function (req, res, next) => {
+    const id = req.params.{id};
     Text.remove({ _id: id })
       .exec()
       .then(result => {
