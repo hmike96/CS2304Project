@@ -3,30 +3,9 @@ const router = express.Router();
 const Blab = require('../models/blab');
 const mongoose = require('mongoose');
 
-
+var array = [];
 router.get('/', (req, res, next) => {
-    Text.find().select('name text').exec().then(docs => {
-        const response = {
-            count : docs.length,
-            products: docs.map(doc => {
-                return {
-                    name: doc.name,
-                    text: doc.text,
-                    _id: doc._id,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3000/textData/' + doc._id
-                    }          
-                }
-            })
-        };
-        res.status(200).json(response);
-    }).catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    });
+    res.status(200).send(array);
 });
 
 router.post('/', (req, res, next) => {
@@ -36,42 +15,39 @@ router.post('/', (req, res, next) => {
         author:{
             email: req.body.email,
             name: req.body.name
-        }
+        },
         message: req.body.message
-    });
-    data.save().then(result =>{
-        console.log(result);
+    });   
+    result =>{
         res.status(201).json({
-            message: 'Created data entry successfully',
+            pass: 'Created data entry successfully',
             createdData: {
-                id: result.id,
-                postTime: result.postTime,
+                id: data.id,
+                postTime: data.postTime,
                 author: {
-                    email: result.email,
-                    name: result.name
+                    email: data.email,
+                    name: data.name
                 },
-                message: result.message
+                message: data.message
             }
         });
-    })
-    .catch(err => {console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    });
+        console.log(result);
+    }
+    console.log("halp");
+
+    array.push(result);
 });
 
-router.delete('/:{id}', function (req, res, next) => {
-    const id = req.params.{id};
-    Text.remove({ _id: id })
-      .exec()
-      .then(result => {
-        res.status(200).json(result);
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(404).json({
-          error: err
-        });
-      });
+router.delete('/:{id}', (req, res) => {
+    const id = req.params.id;
+    var array1 = array;
+    return array.filter(function(value, index, arr){
+
+        return value.id != id;
+    
+    });
+    if(array1 != array){res.status(200);}
+    else{res.status(404);}
   });
+
+  module.exports = router;

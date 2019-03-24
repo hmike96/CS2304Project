@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 
-const textDataRoutes = require('./api/routes/blabber');
-
+const blabberRoutes = require('./api/routes/blabber');
+app.use('/uploads', express.static('uploads'));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -16,6 +16,8 @@ app.use((req, res, next) => {
     }
     next();
 });
+app.use("\blabber",blabberRoutes);
+
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
